@@ -26,6 +26,7 @@ export default class List extends Component {
 						<li key={index} className="list-group-item">
 							{item}
 						</li>
+
 					))
 				}
 			</div>
