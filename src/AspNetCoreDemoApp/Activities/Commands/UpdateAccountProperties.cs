@@ -16,7 +16,7 @@ using Elsa.Services.Models;
 public class UpdateAccountAttributes : Activity
 {
     [ActivityInput(Hint = "Account UID.",
-        DefaultValue = "`${input.UID}`",
+        DefaultValue = "`${context.identity.UID}`",
         SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
         DefaultSyntax = SyntaxNames.JavaScript)]
     public object UID { get; set; } = default!;

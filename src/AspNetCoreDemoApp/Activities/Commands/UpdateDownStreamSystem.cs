@@ -16,25 +16,25 @@ using Elsa.Services.Models;
 public class UpdateDownStreamSystem : Activity
 {
     [ActivityInput(Hint = "Account UID.",
-        DefaultValue = "`${input.UID}`",
+        DefaultValue = "`${context.identity.UID}`",
         SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
         DefaultSyntax = SyntaxNames.JavaScript)]
     public object UID { get; set; } = default!;
 
     [ActivityInput(Hint = "Account Consents.",
-        DefaultValue = "`${input.consents}`",
+        DefaultValue = "`${merge(context.account?.consent, context.attributes.consents}`",
         SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
         DefaultSyntax = SyntaxNames.JavaScript)]
     public object Consents { get; set; } = default!;
 
     [ActivityInput(Hint = "Account Profile.",
-        DefaultValue = "`${input.profile}`",
+        DefaultValue = "`${merge(context.account?.profile, context.attributes.profile}`",
         SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
         DefaultSyntax = SyntaxNames.JavaScript)]
     public object Profile { get; set; } = default!;
 
     [ActivityInput(Hint = "Account Subscriptions.",
-        DefaultValue = "`${input.subscriptions}`",
+        DefaultValue =  "`${merge(context.account?.subscriptions, context.attributes.subscriptions}`",
         SupportedSyntaxes = new[] { SyntaxNames.JavaScript },
         DefaultSyntax = SyntaxNames.JavaScript)]
     public object Subscriptions { get; set; } = default!;
