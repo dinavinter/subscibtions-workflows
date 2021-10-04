@@ -12,8 +12,7 @@ namespace AspNetCoreDemoApp.Providers.Activities
 {
     [Job(
         Category = "state.Services",
-        DisplayName = "Custom Service",
-        Description = "Sends a task to your application and waits for the application to report the task as completed or cancelled."
+         Description = "Sends a task to your application and waits for the application to report the task as completed or cancelled."
     )]
     public class RunService : Activity
     {

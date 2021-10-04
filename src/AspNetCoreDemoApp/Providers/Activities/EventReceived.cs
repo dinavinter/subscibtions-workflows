@@ -13,8 +13,7 @@ namespace Elsa.Activities.Conductor
 {
     [Trigger(
         Category = "state.Events",
-        DisplayName = "Custom Event",
-        Description = "Waits for an event sent from your application."
+         Description = "Waits for an event sent from your application."
     )]
     public class EventReceived : Activity
     {

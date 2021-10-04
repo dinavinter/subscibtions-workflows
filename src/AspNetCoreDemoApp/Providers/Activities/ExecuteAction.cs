@@ -12,8 +12,7 @@ namespace AspNetCoreDemoApp.Providers.Activities
 {
     [Action(
         Category = "state.Actions",
-        DisplayName = "Custom Action",
-        Description = "Executes action- doesn't effect state.",
+         Description = "Executes action- doesn't effect state.",
         Outcomes = new[] { OutcomeNames.Done }
     )]
     public class ExecuteAction : Activity
