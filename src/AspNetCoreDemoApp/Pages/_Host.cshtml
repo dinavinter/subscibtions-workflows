@@ -1,4 +1,5 @@
 @page "/"
+@using Elsa.Expressions
 @{
     var serverUrl = $"{Request.Scheme}://{Request.Host}";
 }
@@ -19,5 +20,42 @@
 <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
+
+<script  type="module">
+ // const {SendEmailInvitationPlugin} = require("../../dashboard-plugins/plugins-studio/gigya-workflow-plugins/www/build/gigya-workflow-plugins.esm");
+ const elsaStudioRoot = document.querySelector('elsa-studio-root');
+
+
+    // Custom activity property type input control plugin:
+    function PropertyEditorDecoratorPlugin(elsaStudio) {
+        const {propertyDisplayManager, getOrCreateProperty} = elsaStudio;
+        function defaultSyntax (pd, syntax){return pd.defaultSyntax === syntax;}
+        function liquid (pd){return defaultSyntax(pd, "@SyntaxNames.Liquid")}
+        function javaScript (pd){return defaultSyntax(pd, "@SyntaxNames.JavaScript")}
+        function json (pd){return defaultSyntax(pd, "@SyntaxNames.Json")}
+        function variable (pd){return defaultSyntax(pd, "@SyntaxNames.Variable")}
+
+        propertyDisplayManager.originalDisplay = propertyDisplayManager.display;
+        propertyDisplayManager.display= displayDecorator;
+         function displayDecorator(activity, propertyDescriptor) {
+             if ( liquid(propertyDescriptor) || javaScript(propertyDescriptor) || variable(propertyDescriptor) || json(propertyDescriptor)){
+             const propertyModel = getOrCreateProperty(activity, propertyDescriptor.name,()=> propertyDescriptor.defaultValue,()=> propertyDescriptor.defaultSyntax );
+             propertyModel.syntax = propertyModel.syntax || propertyDescriptor.defaultSyntax ;
+             console.log(propertyModel);
+               }
+             return  propertyDisplayManager.originalDisplay(activity, propertyDescriptor);
+          }
+    }
+
+
+
+
+
+
+    elsaStudioRoot.addEventListener('initializing', e => {
+        const elsaStudio = e.detail;
+        elsaStudio.pluginManager.registerPlugins([PropertyEditorDecoratorPlugin]);
+    });
+</script>
 </body>
 </html>

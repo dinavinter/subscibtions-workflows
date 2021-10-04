@@ -1,6 +1,8 @@
 using System;
 using System.Configuration;
+using AspNetCoreDemoApp.Activities;
 using Elsa;
+using Elsa.Activities.Conductor.Extensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Microsoft.AspNetCore.Builder;
@@ -31,11 +33,12 @@ namespace AspNetCoreDemoApp
             services
                 .AddElsa(elsa => elsa
                     .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
-                    .AddConsoleActivities()
-                    .AddHttpActivities(elsaSection.GetSection("Server").Bind)
-                    .AddActivitiesFrom<Startup>()
-                    .AddQuartzTemporalActivities()
-                    .AddJavaScriptActivities()
+                    // .AddConsoleActivities()
+                    .AddConductorActivities(options => elsaSection.GetSection("Conductor").Bind(options))
+                   .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                    .AddActivity<UpdateAccountAttributes>()
+                    // .AddQuartzTemporalActivities()
+                    // .AddJavaScriptActivities()
                 );
 
             // Elsa API endpoints.
