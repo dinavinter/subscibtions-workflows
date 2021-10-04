@@ -10,7 +10,7 @@ using Elsa.Services.Models;
 
 
 [Action(
-    Category = "Conductor",
+    Category = "state.Actions",
     DisplayName = "Update Downstream System",
     Description = "Sends updates to downstream system.", Outcomes = new string[] { "Done" })]
 public class UpdateDownStreamSystem : Activity

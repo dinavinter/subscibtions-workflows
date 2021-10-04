@@ -10,7 +10,7 @@ using Elsa.Services.Models;
 
 
 [Action(
-    Category = "Conductor",
+    Category = "state.Actions",
     DisplayName = "Update Account Attributes",
     Description = "Sends an account update command.", Outcomes = new string[] { "Done" })]
 public class UpdateAccountAttributes : Activity
