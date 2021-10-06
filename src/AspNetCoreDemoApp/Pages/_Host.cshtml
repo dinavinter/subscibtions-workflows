@@ -21,7 +21,9 @@
     <elsa-studio-dashboard></elsa-studio-dashboard>
 </elsa-studio-root>
 
-<script  type="module">
+    <script type="module" src="~/plugins/plugins.js"></script>
+
+<script type="module">
  // const {SendEmailInvitationPlugin} = require("../../dashboard-plugins/plugins-studio/gigya-workflow-plugins/www/build/gigya-workflow-plugins.esm");
  const elsaStudioRoot = document.querySelector('elsa-studio-root');
 
@@ -38,7 +40,7 @@
         propertyDisplayManager.originalDisplay = propertyDisplayManager.display;
         propertyDisplayManager.display= displayDecorator;
          function displayDecorator(activity, propertyDescriptor) {
-             if ( liquid(propertyDescriptor) || javaScript(propertyDescriptor) || variable(propertyDescriptor) || json(propertyDescriptor)){
+             if ( liquid(propertyDescriptor) || javaScript(propertyDescriptor) || variable(propertyDescriptor) ){
              const propertyModel = getOrCreateProperty(activity, propertyDescriptor.name,()=> propertyDescriptor.defaultValue,()=> propertyDescriptor.defaultSyntax );
              propertyModel.syntax = propertyModel.syntax || propertyDescriptor.defaultSyntax ;
              console.log(propertyModel);
@@ -46,9 +48,6 @@
              return  propertyDisplayManager.originalDisplay(activity, propertyDescriptor);
           }
     }
-
-
-
 
 
 

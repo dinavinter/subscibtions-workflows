@@ -4,9 +4,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using AspNetCoreDemoApp.Providers.Activities;
 using AspNetCoreDemoApp.Providers.Events;
 using Elsa;
-using Elsa.Activities.Conductor;
 using Elsa.Metadata;
 using Elsa.Providers.Activities;
 using Elsa.Services;
@@ -21,36 +21,49 @@ namespace AspNetCoreDemoApp.Providers.ActivityTypes
         private readonly IActivityActivator _activityActivator;
         private readonly Scoped<IEnumerable<IEventsProvider>> _scopedEventsProviders;
 
-        public EventActivityTypeProvider(IDescribesActivityType describesActivityType, IActivityActivator activityActivator, Scoped<IEnumerable<IEventsProvider>> scopedEventsProviders)
+        public EventActivityTypeProvider(IDescribesActivityType describesActivityType,
+            IActivityActivator activityActivator, Scoped<IEnumerable<IEventsProvider>> scopedEventsProviders)
         {
             _describesActivityType = describesActivityType;
             _activityActivator = activityActivator;
             _scopedEventsProviders = scopedEventsProviders;
         }
 
-        public async ValueTask<IEnumerable<ActivityType>> GetActivityTypesAsync(CancellationToken cancellationToken = default)
+        public async ValueTask<IEnumerable<ActivityType>> GetActivityTypesAsync(
+            CancellationToken cancellationToken = default)
         {
             var events = await GetEventsAsync(cancellationToken);
             return await GetActivityTypesAsync(events, cancellationToken).ToListAsync(cancellationToken);
         }
 
-        private async IAsyncEnumerable<ActivityType> GetActivityTypesAsync(IEnumerable<EventDefinition> events, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        private async IAsyncEnumerable<ActivityType> GetActivityTypesAsync(IEnumerable<EventDefinition> events,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             foreach (var eventDefinition in events)
                 yield return await CreateActivityTypeAsync(eventDefinition, cancellationToken);
         }
 
-        private async Task<ActivityType> CreateActivityTypeAsync(EventDefinition eventDefinition, CancellationToken cancellationToken)
+        private async Task<ActivityType> CreateActivityTypeAsync(EventDefinition eventDefinition,
+            CancellationToken cancellationToken)
         {
             async ValueTask<ActivityDescriptor> CreateDescriptorAsync()
             {
                 var des = await _describesActivityType.DescribeAsync<EventReceived>(cancellationToken);
 
                 des.Type = eventDefinition.Name;
-                 des.DisplayName = eventDefinition.DisplayName ?? eventDefinition.Name;
+                des.DisplayName = eventDefinition.DisplayName ?? eventDefinition.Name;
                 des.Description = eventDefinition.Description;
-                des.InputProperties = Array.Empty<ActivityInputDescriptor>();
-                des.Outcomes = eventDefinition.Outcomes?.ToArray() ?? new[] { OutcomeNames.Done };
+                des.InputProperties = des.InputProperties;
+                des.InputProperties
+                        .First(x => x.Name == nameof(EventReceived.OutcomeNames))
+                        .DefaultValue = eventDefinition.Outcomes?.ToHashSet() ??
+                                        new HashSet<string>() { OutcomeNames.Done };
+                des.InputProperties
+                        .First(x => x.Name == nameof(EventReceived.EventName))
+                        .DefaultValue = eventDefinition.Name;
+
+
+                // des.Outcomes = eventDefinition.Outcomes?.ToArray() ?? new[] { OutcomeNames.Done };
 
                 return des;
             }
@@ -64,10 +77,16 @@ namespace AspNetCoreDemoApp.Providers.ActivityTypes
                 DisplayName = descriptor.DisplayName,
                 DescribeAsync = CreateDescriptorAsync,
                 Description = descriptor.Description,
+
+
                 ActivateAsync = async context =>
                 {
-                    var activity = await _activityActivator.ActivateActivityAsync<EventReceived>(context, cancellationToken);
+                    var activity =
+                        await _activityActivator.ActivateActivityAsync<EventReceived>(context, cancellationToken);
                     activity.EventName = eventDefinition.Name;
+                    if (eventDefinition.Outcomes != null)
+                        activity.OutcomeNames = new HashSet<string>(eventDefinition.Outcomes);
+
                     return activity;
                 },
                 CanExecuteAsync = async (context, instance) => await instance.CanExecuteAsync(context),
@@ -77,9 +96,11 @@ namespace AspNetCoreDemoApp.Providers.ActivityTypes
         }
 
         private async Task<IEnumerable<EventDefinition>> GetEventsAsync(CancellationToken cancellationToken) =>
-            await _scopedEventsProviders.UseServiceAsync(async eventProviders => await GetEventsAsync(eventProviders, cancellationToken).ToListAsync(cancellationToken));
+            await _scopedEventsProviders.UseServiceAsync(async eventProviders =>
+                await GetEventsAsync(eventProviders, cancellationToken).ToListAsync(cancellationToken));
 
-        private static async IAsyncEnumerable<EventDefinition> GetEventsAsync(IEnumerable<IEventsProvider> eventProviders, [EnumeratorCancellation] CancellationToken cancellationToken)
+        private static async IAsyncEnumerable<EventDefinition> GetEventsAsync(
+            IEnumerable<IEventsProvider> eventProviders, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             foreach (var commandProvider in eventProviders)
             {
