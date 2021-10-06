@@ -44,7 +44,7 @@ namespace AspNetCoreDemoApp.Providers.Activities
 
         [ActivityInput(
             Hint = "Enter one or more possible outcomes for this event.",
-            UIHint = "Outcomes",
+            UIHint = "outcomes",
             DefaultSyntax = SyntaxNames.Json,
             SupportedSyntaxes = new[] { SyntaxNames.Json },
              IsDesignerCritical = true
