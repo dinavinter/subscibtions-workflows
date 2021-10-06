@@ -1,41 +1,71 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-      <LangVersion>9</LangVersion>
-
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-      
-    <PackageReference Include="Elsa" Version="2.3.0" />
-      
-    <PackageReference Include="Elsa.Activities.Conductor" Version="2.3.0" />
-    <PackageReference Include="Elsa.Activities.Http" Version="2.3.0" />
-    <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.3.0" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.3.0" />
-    <PackageReference Include="Elsa.Server.Api" Version="2.3.0" />
-      <PackageReference Include="Elsa.Designer.Components.Web" Version="2.3.0" />
-      <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.3.0" />
-      <PackageReference Include="Elsa.Persistence.YesSql" Version="2.3.0" />
-      <PackageReference Include="Elsa.Server.Api" Version="2.3.0" />
-      <PackageReference Include="Elsa.Webhooks.Persistence.YesSql" Version="2.3.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.2.0" />
-      <PackageReference Include="XStateNet" Version="1.0.3" />
-
-  </ItemGroup>
-
-  <Target Name="PrePublishTarget" BeforeTargets="PrepareForPublish" Condition="$(DOTNET_RUNNING_IN_CONTAINER) != 'true'">
-    <Exec Command="npm install" />
-    <Exec Command="npm run build" />
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <LangVersion>9</LangVersion>
+<!--        <SpaRoot>Plugins\plugins\workflow-plugins\</SpaRoot>-->
+<!--        <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>-->
+     </PropertyGroup>
+<!--    <ItemGroup>-->
+<!--        <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.0" />-->
+<!--        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.1" />-->
+<!--    </ItemGroup>-->
     <ItemGroup>
-      <Dist Include="../../build/**" />
+        <Folder Include="wwwroot\" />
+<!--        <Folder Include="wwwroot\www" />-->
     </ItemGroup>
-    <Copy SourceFiles="@(Dist)" DestinationFolder="$(PublishDir)\wwwroot\%(RecursiveDir)" SkipUnchangedFiles="true" />
-  </Target>
+ 
+    <ItemGroup>
+        <!-- Don't publish the SPA source files, but do show them in the project files list -->
+        <Content Include="Scripts\plugins\**">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        
+    </ItemGroup>
+
+ 
+
+    <ItemGroup>
+        <PackageReference Include="Elsa" Version="2.3.0" />
+
+        <PackageReference Include="Elsa.Activities.Conductor" Version="2.3.0" />
+        <PackageReference Include="Elsa.Activities.Http" Version="2.3.0" />
+        <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.3.0" />
+        <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.3.0" />
+        <PackageReference Include="Elsa.Server.Api" Version="2.3.0" />
+        <PackageReference Include="Elsa.Designer.Components.Web" Version="2.3.0" />
+        <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.3.0" />
+        <PackageReference Include="Elsa.Persistence.YesSql" Version="2.3.0" />
+        <PackageReference Include="Elsa.Server.Api" Version="2.3.0" />
+        <PackageReference Include="Elsa.Webhooks.Persistence.YesSql" Version="2.3.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.2.0" />
+        <PackageReference Include="XStateNet" Version="1.0.3" />
+
+    </ItemGroup>
+  
+
+
+    <Target Name="PrePublishTarget" BeforeTargets="PrepareForPublish" Condition="$(DOTNET_RUNNING_IN_CONTAINER) != 'true'">
+        <Exec Command="npm install" />
+        <Exec Command="npm run build" />
+        <ItemGroup>
+            <Dist Include="../../build/**" />
+        </ItemGroup>
+        <Copy SourceFiles="@(Dist)" DestinationFolder="$(PublishDir)\wwwroot\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    </Target>    
+    
+    <Target Name="PrePublishTarget" BeforeTargets="PrepareForPublish" Condition="$(DOTNET_RUNNING_IN_CONTAINER) != 'true'">
+        <Exec Command="npm install" />
+        <Exec Command="npm run build" />
+        <ItemGroup>
+            <Dist Include="Scripts/plugins/**" />
+        </ItemGroup>
+        <Copy SourceFiles="@(Dist)" DestinationFolder="$(PublishDir)\wwwroot\plugins\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    </Target>
+
+<!--    <PropertyGroup Condition="'$(Configuration)' == 'Release'">-->
+<!--        <PreBuildEvent>npm run frontend-build-all &#45;&#45;color=always</PreBuildEvent>-->
+<!--    </PropertyGroup>-->
 </Project>
