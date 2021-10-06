@@ -1,5 +1,5 @@
 
-import {EventReceivedPlugin} from "./EventReceived.js";
+import {EventReceivedPlugin} from "./EventRecived.js";
 import {DriversPlugin} from "./OutcomesDriver.js";
 
 const elsaStudioRoot = document.querySelector('elsa-studio-root');
