@@ -1,0 +1,10 @@
+{
+  "consentInstanceId": "consent1",
+  "consentRequired": true,
+  "promptUI": "consentPopup",
+  "postPromptUI": "repromptDialog",
+  "uiConfig": {
+    "overlay": true
+  },
+  "purposeConsentRequired": ["purpose-analytics", "purpose-marketing"]
+}
