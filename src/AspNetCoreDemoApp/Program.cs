@@ -11,6 +11,7 @@ namespace AspNetCoreDemoApp
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStaticWebAssets()
+
                 .UseStartup<Startup>();
     }
 }

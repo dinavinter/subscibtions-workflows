@@ -2,32 +2,37 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AspNetCoreDemoApp.Providers.Models;
 using Elsa;
-using Elsa.Activities.Conductor.Models;
+using Elsa.Activities.ControlFlow;
 using Elsa.ActivityResults;
 using Elsa.Attributes;
+using Elsa.Builders;
 using Elsa.Design;
 using Elsa.Expressions;
 using Elsa.Metadata;
 using Elsa.Services;
 using Elsa.Services.Models;
+using EventModel = Elsa.Activities.Conductor.Models.EventModel;
 
 // ReSharper disable once CheckNamespace
 namespace AspNetCoreDemoApp.Providers.Activities
 {
     [Trigger(
         Category = "state.Events",
-        Description = "Waits for an event sent from your application."
+        Description = "Waits for an event sent from your application.",
+        Type = "EventReceived"
         // Outcomes = typeof(EventReceived)
 
     )]
-    public class EventReceived : Activity, IOutcomesProvider
+    public class EventReceived :  Activity, IOutcomesProvider
     {
         [ActivityInput(
             Label = "Event",
             Hint = "The event to wait for.",
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript, SyntaxNames.Liquid },
             IsDesignerCritical = true,
+            Category = "Common",
             Options = "DisplayName"
         )]
         public string EventName { get; set; } = default!;
@@ -36,7 +41,8 @@ namespace AspNetCoreDemoApp.Providers.Activities
             Hint = "The name of this state.",
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript, SyntaxNames.Liquid },
             DefaultSyntax = SyntaxNames.JavaScript,
-            DefaultValue = "`${context.CurrentState}.${context.activity.EventName}`"
+            DefaultValue = "`${context.CurrentState}.${context.activity.EventName}`",
+            IsReadOnly = true
 
             )]
         public string StateName { get; set; } = default!;
@@ -53,6 +59,31 @@ namespace AspNetCoreDemoApp.Providers.Activities
 
         [ActivityOutput(Hint = "Any input that was sent along with the event from your application.")]
         public object? Payload { get; set; }
+        // [ActivityInput(Hint = "The conditions to evaluate.", UIHint = "switch-case-builder", DefaultSyntax = "Switch", IsDesignerCritical = true)]
+        public ICollection<TransitionModel> Transitions { get; set; } = new List<TransitionModel>();
+        public bool EnteredScope
+        {
+            get => GetState<bool>();
+            set => SetState(value);
+        }
+        public OutcomeResult Outcome
+        {
+            get => GetState<OutcomeResult>();
+            set => SetState(value);
+        }
+
+        // public override void Build(ICompositeActivityBuilder builder)
+        // {
+        //     builder.Switch(e =>
+        //     {
+        //         Transitions.Select(t => e.Add(t.Name, (ctx) =>
+        //         {
+        //             ctx.GetActivityPropertyAsync()
+        //         }, outcome => outcome.Then(builder, activityBuilder => activityBuilder.Finish(
+        //             t.Name)));
+        //     })
+        //     base.Build(builder);
+        // }
 
         protected override IActivityExecutionResult OnExecute(ActivityExecutionContext context) =>
             context.IsFirstPass ? OnExecuteInternal(context) : Suspend();

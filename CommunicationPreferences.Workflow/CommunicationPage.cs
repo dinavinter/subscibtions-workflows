@@ -11,8 +11,8 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace CommunicationPreferences.Workflow
 {
-    public class   @{
-    }Page: CompositeActivity
+    public class  CommunicationPage: CompositeActivity
+
     {
         private const string EmbeddedFile = "CommunicationPreferences.Workflow._views.index.html";
         public Func<Stream> IndexStream { get; set; } = () => typeof(CommunicationPage).GetTypeInfo().Assembly

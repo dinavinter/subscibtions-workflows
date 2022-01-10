@@ -41,8 +41,7 @@ namespace AspNetCoreDemoApp
                     .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
                     // .AddConsoleActivities()
 
-
-                    .AddXStateActivities(options => elsaSection.GetSection("XState").Bind(options))
+                     .AddXStateActivities(options => elsaSection.GetSection("XState").Bind(options))
                    .AddHttpActivities(elsaSection.GetSection("Server").Bind)
                     .AddActivity<UpdateAccountAttributes>()
                     .AddQuartzTemporalActivities()
@@ -87,6 +86,8 @@ namespace AspNetCoreDemoApp
                 Console.WriteLine("Use https redirection");
                 app.UseHttpsRedirection();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elsa"));
 
             if (env.IsDevelopment())
             {
