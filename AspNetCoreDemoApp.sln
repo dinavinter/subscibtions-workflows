@@ -8,6 +8,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationPreferences.Wo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationPreferences", "src\CommunicationPreferences\CommunicationPreferences.csproj", "{8C8534EE-DC36-48E6-A4C0-6F2108B54291}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{430266E4-6F8E-45DE-926A-2E8B4B0B9E52}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfile = Dockerfile
+	.dockerignore = .dockerignore
+	.editorconfig = .editorconfig
+	heroku.yml = heroku.yml
+	README.md = README.md
+	run.sh = run.sh
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

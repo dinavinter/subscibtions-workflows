@@ -135,13 +135,13 @@ namespace AspNetCoreDemoApp
                 .UseCors("CorsPolicy")
                 .UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
 
-            app.UseFileServer(new FileServerOptions
+                /* app.UseFileServer(new FileServerOptions
             {
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(env.WebRootPath, "_api")),
                 RequestPath = "/_api",
                 EnableDirectoryBrowsing = true
-            });
+            });*/
         }
     }
 }

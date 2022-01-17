@@ -20,7 +20,7 @@ namespace AspNetCoreDemoApp.DsStore
             var response = await request.SendAsync(_client, cancellationToken);
             response.EnsureSuccessStatusCode();
             var jsonResponse = await response.Content.ReadAsStringAsync(cancellationToken);
-            Console.WriteLine(jsonResponse);
+            // Console.WriteLine(jsonResponse);
             return JsonSerializer.Deserialize<T>(jsonResponse,SerializerOptions);
         }
 
