@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using AspNetCoreDemoApp.Activities;
+using AspNetCoreDemoApp.DsStore;
 using AspNetCoreDemoApp.Providers.ActivityTypes;
 using AspNetCoreDemoApp.Providers.Extensions;
 using CommunicationPreferences.Workflow;
@@ -37,18 +38,27 @@ namespace AspNetCoreDemoApp
 
             // Elsa services.
             services
-                .AddElsa(elsa => elsa
-                    .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
-                    // .AddConsoleActivities()
+                .AddElsa(elsa =>
+                {
+                    elsa
+                        .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
+                        // .AddConsoleActivities()
+                        .AddXStateActivities(options => elsaSection.GetSection("XState").Bind(options))
+                        .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                        .AddActivity<UpdateAccountAttributes>()
+                        .AddQuartzTemporalActivities()
+                        .AddJavaScriptActivities()
+                        .AddCommunicationPreferences();
 
-                     .AddXStateActivities(options => elsaSection.GetSection("XState").Bind(options))
-                   .AddHttpActivities(elsaSection.GetSection("Server").Bind)
-                    .AddActivity<UpdateAccountAttributes>()
-                    .AddQuartzTemporalActivities()
-                    .AddJavaScriptActivities()
-                    .AddCommunicationPreferences()
+                    elsa.Services
+                        .AddSingleton<HttpJsonClient>()
+                        .AddSingleton(typeof(DsStore<>))
+                        .AddSingleton(typeof(DefinitionDsStore));
 
-                );
+                    elsa
+                        .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<DefinitionDsStore>())
+                        ;
+                });
 
             // Elsa API endpoints.
             services
