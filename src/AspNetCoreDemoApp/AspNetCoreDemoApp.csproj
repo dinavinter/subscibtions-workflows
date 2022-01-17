@@ -44,6 +44,18 @@
         <PackageReference Include="XStateNet" Version="1.0.3" />
 
     </ItemGroup>
+
+ 
+
+    <ItemGroup>
+       <ProjectReference Include="..\CommunicationPreferences\CommunicationPreferences.csproj" />
+    </ItemGroup>
+
+ 
+
+    <ItemGroup>
+      <None Include="Pages\Shared\_Layout.cshtml" />
+    </ItemGroup>
   
 
 

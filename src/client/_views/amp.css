@@ -1,0 +1,465 @@
+body {
+    -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+    -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+    -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+    animation: -amp-start 8s steps(1, end) 0s 1 normal both
+}
+
+@-webkit-keyframes -amp-start {
+    from {
+        visibility: hidden
+    }
+    to {
+        visibility: visible
+    }
+}
+
+@-moz-keyframes -amp-start {
+    from {
+        visibility: hidden
+    }
+    to {
+        visibility: visible
+    }
+}
+
+@-ms-keyframes -amp-start {
+    from {
+        visibility: hidden
+    }
+    to {
+        visibility: visible
+    }
+}
+
+@-o-keyframes -amp-start {
+    from {
+        visibility: hidden
+    }
+    to {
+        visibility: visible
+    }
+}
+
+@keyframes -amp-start {
+    from {
+        visibility: hidden
+    }
+    to {
+        visibility: visible
+    }
+}
+
+body {
+    -webkit-animation: none;
+    -moz-animation: none;
+    -ms-animation: none;
+    animation: none
+}
+
+:root {
+    --color-primary: #005AF0;
+    --color-text-light: #fff;
+    --color-text-dark: #000;
+    --color-bg-light: #FAFAFC;
+
+    --space-1: .5rem;  /* 8px */
+    --space-2: 1rem;   /* 16px */
+    --space-3: 1.5rem; /* 24px */
+    --space-4: 2rem;   /* 32px */
+    --space-5: 3rem;   /* 48px */
+}
+/* Simple Stepper */
+.stepper.simple .step-dots {
+    user-select: none;
+}
+
+.stepper.simple .step-dot {
+    display: inline-block;
+    background: #ddd;
+    overflow: hidden;
+    text-indent: -999px;
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+    box-shadow: inset 0 1px 1px 0 #999;
+}
+
+.stepper.simple .step-dot.active {
+    background: linear-gradient(#00CFFF, #1584bc);
+    box-shadow: inset 0 0 1px 1px #087DC0;
+}
+
+.stepper.simple section {
+    background-color: var(--color-bg-light);
+}
+
+.stepper.simple .content {
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stepper.simple .top-bar,
+.stepper.simple .bottom-bar {
+    height: var(--space-5);
+    line-height: var(--space-5);
+    background-color: #f2f2f2;
+    color: #4a4a4a;
+}
+
+.stepper.simple .top-bar {
+    padding: 0 var(--space-3);
+    font-size: var(--space-2);
+}
+
+.stepper.simple .bottom-bar {
+    height: var(--space-5);
+    line-height: var(--space-5);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stepper.simple .bottom-bar .button-next,
+.stepper.simple .bottom-bar .button-prev {
+    position: absolute;
+    height: 100%;
+    border: none;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    width: 72px;
+    user-select: none;
+    background: unset;
+}
+
+.stepper.simple .bottom-bar .button-prev {
+    top: 0;
+    left: 0;
+}
+
+.stepper.simple .bottom-bar .button-next {
+    top: 0;
+    right: 0;
+}
+
+.stepper.simple .bottom-bar .button-next:after {
+    padding: var(--space-1);
+    content: ">";
+    font-weight: 500;
+}
+
+.stepper.simple .bottom-bar .button-prev:before {
+    padding: var(--space-1);
+    content: "<";
+    font-weight: 500;
+}
+
+/* Vertical Stepper */
+.stepper.vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.stepper.vertical .step-title {
+    padding: var(--space-1);
+    font-size: var(--space-2);
+    display: block;
+    border: none;
+    line-height: var(--space-3);
+    text-align: left;
+}
+
+.stepper.vertical .step-title:not([disabled]):active {
+    background-color: #ccc;
+}
+
+.stepper.vertical .step-title:not([disabled]) {
+    cursor: pointer;
+}
+
+.stepper.vertical .step-title.step-active {
+    background-color: #f2f2f2;
+    font-weight: 700;
+}
+
+.stepper.vertical .step-title i {
+    display: inline-block;
+    width: var(--space-3);
+    height: var(--space-3);
+    margin: var(--space-1);
+    background-color: var(--color-primary);
+    border-radius: 100%;
+    color: white;
+    font-size: 14px;
+    font-style: normal;
+    transition: background 0.25s ease-in-out;
+}
+
+.stepper.vertical .step-title[disabled] .step-incomplete {
+    background-color: #ccc;
+}
+
+.stepper.vertical .step-title .step-incomplete:before {
+    content: attr(data-step-nr);
+    display: block;
+    text-align: center;
+    font-weight: 700;
+}
+
+.stepper.vertical .step-title .step-complete:before {
+    content: "✓";
+    display: block;
+    text-align: center;
+    font-weight: 700;
+}
+
+.stepper.vertical .content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-2);
+    margin-left: var(--space-4);
+}
+
+.stepper.vertical .content > *:nth-child(n+2) {
+    margin-top: var(--space-2);
+}
+
+.stepper.vertical .content button {
+    color: #fff;
+    background: var(--color-primary);
+    border: 1px solid #fff;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    padding: .5em .8em;
+}
+
+.stepper.vertical .content button[disabled] {
+    opacity: .5;
+    outline: 0;
+    cursor: default;
+}
+
+/* Sliding Stepper */
+.stepper.sliding {
+    position: relative;
+    overflow-x: hidden;
+    height: 300px;
+    max-width: 420px;
+    margin: var(--space-2) auto;
+}
+
+.stepper.sliding .page {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: var(--space-2);
+    transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+}
+
+.stepper.sliding h3 + * {
+    margin-top: var(--space-2);
+}
+
+.stepper.sliding .page.active {
+    transform: translateX(0%);
+    pointer-events: auto;
+}
+
+.stepper.sliding .page:not(.active) {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.stepper.sliding .page.next {
+    transform: translateX(100%);
+}
+
+.stepper.sliding .page.previous {
+    transform: translateX(-100%);
+}
+
+.stepper.sliding .back {
+    position: relative;
+    height: var(--space-4);
+    width: 100%;
+    max-width: 300px;
+    cursor: pointer;
+    line-height: var(--space-4);
+    border: none;
+    text-align: left;
+    padding: 0;
+    -webkit-appearance: none;
+    background: none;
+    color: var(--color-text-dark);
+    border: none;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    width: 280px;
+    text-transform: none;
+    letter-spacing: inherit;
+}
+
+.stepper.sliding .back:after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 3px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.stepper.sliding button {
+    padding: 0.25rem var(--space-2);
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    border: 1px solid #fff;
+    font-size: 1rem;
+    line-height: 1.125rem;
+    padding: .7em .8em;
+    text-decoration: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    vertical-align: middle;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+}
+
+.stepper.sliding .input {
+    position: relative;
+    margin: var(--space-3) 0;
+    display: inline-block;
+    max-width: 100%;
+    width: 300px;
+    min-width: 100px;
+    font-size: var(--space-2);
+    line-height: var(--space-3);
+}
+
+.stepper.sliding .input > input {
+    width: 100%;
+    margin-top: var(--space-2);
+    line-height: var(--space-3);
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid #4a4a4a;
+    background: 0 0;
+    color: #4a4a4a;
+    outline: 0;
+}
+
+.stepper.sliding .input > input:focus {
+    outline: 0;
+}
+
+.stepper.sliding .input > label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: var(--color-primary);
+    pointer-events: none;
+    font-size: .875rem;
+    line-height: var(--space-2);
+    opacity: 0;
+    animation: .2s;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+    animation-fill-mode: forwards;
+}
+
+.stepper.sliding .input > label:after {
+    content: "";
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+    background: #003f93;
+    -webkit-transition: .2s;
+    transition: .2s;
+    -webkit-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    visibility: hidden;
+    width: 10px;
+}
+
+@keyframes move-input-label {
+    to {
+        opacity: 1;
+    }
+}
+
+.stepper.sliding .input input:focus::-webkit-input-placeholder {
+    opacity: 0;
+}
+
+.stepper.sliding .input > input:focus + label {
+    animation-name: move-input-label;
+}
+
+.stepper.sliding .input > input:focus + label:after {
+    left: 0;
+    width: 100%;
+    visibility: visible;
+}
+
+/* Survey styling */
+amp-selector.poll [option][selected] {
+    outline: none;
+}
+
+amp-selector.poll [option] {
+    display: flex;
+    align-items: center;
+}
+
+amp-selector.poll [option]:before {
+    transition: background 0.25s ease-in-out;
+    content: "";
+    display: inline-block;
+    width: var(--space-2);
+    height: var(--space-2);
+    margin: var(--space-1);
+    border-radius: 100%;
+    border: solid 1px var(--color-primary);
+    font-size: 14px;
+    line-height: var(--space-2);
+}
+
+amp-selector.poll [option][selected]:before {
+    text-align: center;
+    content: "✓";
+    color: #fff;
+    background: var(--color-primary);
+}
+
+amp-selector.poll [option][selected]:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+/* preview style */
+h2.preview-only {
+    margin: var(--space-2);
+    margin-top: var(--space-3);
+    margin-bottom: 0;
+}
+
+h2.preview-only + p {
+    margin: var(--space-1) var(--space-2);
+}
+

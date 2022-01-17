@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>CommunicationPreferences.Workflow</RootNamespace>
+        <AssemblyName>CommunicationPreferences.Workflow</AssemblyName>
+ 
+    </PropertyGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    <PropertyGroup Label="enableTypeScript" Condition="false">
+        <TypescriptOutDir>wwwroot</TypescriptOutDir>
+        <ResolveCurrentProjectStaticWebAssetsInputsDependsOn>
+            CompileTypeScript;
+            $(ResolveCurrentProjectStaticWebAssetsInputs)
+        </ResolveCurrentProjectStaticWebAssetsInputsDependsOn>
+
+    </PropertyGroup>
+<!--    <ItemGroup>-->
+<!--        &lt;!&ndash; Don't publish the SPA source files, but do show them in the project files list &ndash;&gt;-->
+<!--        <Content Include="config\**">-->
+<!--            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>-->
+<!--            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
+<!--        </Content>-->
+<!--        <Content Include="Pages\Areas\Communication\Index.cshtml" />-->
+<!--             &lt;!&ndash; Don't publish the SPA source files, but do show them in the project files list &ndash;&gt;-->
+<!--            <Content Include="_api\config\**">-->
+<!--                -->
+<!--                <ExcludeFromSingleFile>true</ExcludeFromSingleFile>-->
+<!--                <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
+<!--            </Content>-->
+<!-- -->
+<!--        <Content Include="assets\**">-->
+<!--            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>-->
+<!--            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
+<!--        </Content>-->
+<!-- -->
+<!--        <EmbeddedResource Include="_js\cmp.js">-->
+<!--          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>-->
+<!--          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
+<!--        </EmbeddedResource>-->
+<!-- -->
+<!--        <EmbeddedResource Include="_views\index.html">-->
+<!--          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>-->
+<!--          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
+<!--          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>-->
+<!--        </EmbeddedResource>-->
+<!--        -->
+<!--    </ItemGroup>-->
+
+    <ItemGroup>
+        <PackageReference Include="Elsa.Activities.Conductor" Version="2.3.0" />
+        <PackageReference Include="Elsa.Activities.Http" Version="2.3.0" />
+        <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.3.0" />
+        <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.3.0" />
+         <PackageReference Include="Elsa.Designer.Components.Web" Version="2.3.0" />
+        <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.3.0" />
+        <PackageReference Include="Elsa.Persistence.YesSql" Version="2.3.0" />
+        <PackageReference Include="Elsa.Server.Api" Version="2.3.0" />
+
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Pages\Areas" />
+      <Folder Include="wwwroot" />
+    </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="Build" Condition="$(DOTNET_RUNNING_IN_CONTAINER) != 'true'">
+         <ItemGroup>
+            <Dist Include="_api/**" />
+        </ItemGroup>
+        <Copy SourceFiles="@(Dist)" DestinationFolder="$(PublishDir)\wwwroot\_api\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    </Target>
+</Project>

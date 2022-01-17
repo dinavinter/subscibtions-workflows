@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "purposes": [
+    {
+      "id": 1,
+      "name": "Newsletter Signup"
+    }
+  ]
+}

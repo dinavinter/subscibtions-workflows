@@ -70,6 +70,7 @@ export function EventReceivedPlugin(elsaStudio) {
 
     const transitionsSyntax ='Json';
     const transitions = props.find(x => x.name === 'OutcomeNames') || {expressions: {'Json': '[]'}, syntax: transitionsSyntax};
+
     const transitionsExpression = transitions.expressions[transitionsSyntax] || [];
     context.outcomes = !!transitionsExpression['$values'] ? transitionsExpression['$values'] : Array.isArray(transitionsExpression) ? transitionsExpression : parseJson(transitionsExpression) || [];
 

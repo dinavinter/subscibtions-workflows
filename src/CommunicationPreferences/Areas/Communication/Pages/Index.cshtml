@@ -1,0 +1,274 @@
+@page
+@{
+    Layout = "_Layout";
+}
+<h2>title</h2>
+
+
+<amp-consent id="siteConsent" layout="nodisplay">
+    <script type="application/json">
+              {
+                "consents": {
+                  "weeklyNewslettersConsent": {
+                    "purposeConsentRequired": ["purpose-analytics", "purpose-marketing"],
+                    "consentRequired": "remote",
+                    "checkConsentHref": "_wf/preferences/communication",
+                    "promptUI": "consent-ui",
+                    "postPromptUI": "post-promt-ui"
+                  }
+                }
+              }
+            </script>
+     <template type="amp-mustache"  >
+        {{#weeklyNewslettersConsent.consentStateValue}}
+        {{siteConsent.weeklyNewslettersConsent.consentStateValue}}
+        {{weeklyNewslettersConsent.consentStateValue}}
+        {{consentStateValue}}
+        <h3>Your Basket is Empty. </h3>
+        {{/isEmpty}}
+        {{^isEmpty}}
+        {{#cartItems}}
+        <div class="item-headline">{{name}} - {{price}}</div>
+        <div class="item-details">
+            <div class="item-attribute">Color: {{color}}</div>
+            <div>Size: {{size}}</div>
+            <div>Qty: {{quantity}}</div>
+            <button type="button" class="delete-button" on="tap: AMP.setState({cartItem:
+                            { id: '{{id}}',
+                              size: '{{size}}'
+                            }}), form-cart-delete.submit">X</button>
+        </div>
+        <br>
+        {{/cartItems}}
+        {{/isEmpty}}
+    </template>
+    <section >
+        <button class="ampstart-btn ampstart-btn-secondary caps" on="tap:AMP.setState({weeklySubscriptionsState: 'subscribed'}),weeklyNewslettersConsent.accept" data-block-on-consent="" amp-access-template="">Subscribe</button>
+    </section>
+    <div id="post-promt-ui">
+<template type="amp-mustache"  >
+        {{#weeklyNewslettersConsent.consentStateValue}}
+        {{siteConsent.weeklyNewslettersConsent.consentStateValue}}
+        {{weeklyNewslettersConsent.consentStateValue}}
+        {{consentStateValue}}
+        <h3>Your Basket is Empty. </h3>
+        {{/isEmpty}}
+        {{^isEmpty}}
+        {{#cartItems}}
+        <div class="item-headline">{{name}} - {{price}}</div>
+        <div class="item-details">
+            <div class="item-attribute">Color: {{color}}</div>
+            <div>Size: {{size}}</div>
+            <div>Qty: {{quantity}}</div>
+            <button type="button" class="delete-button" on="tap: AMP.setState({cartItem:
+                            { id: '{{id}}',
+                              size: '{{size}}'
+                            }}), form-cart-delete.submit">X</button>
+        </div>
+        <br>
+        {{/cartItems}}
+        {{/isEmpty}}
+    </template>
+    <section >
+        <button class="ampstart-btn ampstart-btn-secondary caps" on="tap:AMP.setState({weeklySubscriptionsState: 'unsubscribed'}),weeklyNewslettersConsent.reject" data-block-on-consent="" amp-access-template="">Unsubscribe</button>
+    </section>
+
+
+        <button on="tap:siteConsent.prompt">Manage</button>
+        @* <button on="tap:ABC.prompt(consent=_ping_)">Manage</button> *@
+    </div>
+    <div id="consent-ui">
+
+    </div>
+    <div id="consentPopup" class="consentPopup">
+
+        <div id="consentDialog">
+            <div class="dismissButton" role="button" tabindex="0" on="tap:siteConsent.dismiss">
+                𝗫
+            </div>
+            <h3>Your privacy</h3>
+            <p>
+                You can control the ways in which we improve and personalize your
+                experience. Please choose whether you wish to allow the following:
+            </p>
+
+            <div class="choices">
+                <div>
+
+                    <amp-state id="items">
+                        siteConsent.sharedData.purposes
+                    </amp-state>
+                    <amp-list layout="fixed-height" height="0" [src]="items" [height]="items.length * 22" single-item items="." binding="no">
+                        <template type="amp-mustache">
+                            <div>{{ . }}</div>
+                        </template>
+                    </amp-list>
+                    <button on="tap:AMP.setState({ items: items.splice(items.length, 0, 'item ' + items.length) })">
+                        Add item
+                    </button>
+                </div>
+                <amp-list height="132" layout="fixed-height" [src]="siteConsent.purposes" binding="no">
+                    <template type="amp-mustache">
+                        <li>{{.}}</li>
+                    </template>
+                </amp-list>
+
+                @* <div id="choice"> *@
+                @*     <button on="tap:choice2.show,choice1.hide">Choice 2</button> *@
+                @* </div> *@
+                <label class="consentLabel" for="consent-purpose-marketing">
+                    <input id="consent-purpose-marketing" type="checkbox" on="change:siteConsent.setPurpose(purpose-marketing=event.checked)">
+                    Marketing cookies
+                </label>
+                <label class="consentLabel" for="consent-purpose-conversion">
+                    <input id="consent-purpose-conversion" type="checkbox" on="change:siteConsent.setPurpose(purpose-conversion=event.checked)">
+                    Conversion tracking cookies
+                </label>
+                <label class="consentLabel" for="consent-purpose-analytics">
+                    <input id="consent-purpose-analytics" type="checkbox" on="change:siteConsent.setPurpose(purpose-analytics=event.checked)">
+                    Analytics
+                </label>
+
+                <button class="choiceButton" on="tap:siteConsent.accept(purposeConsentDefault=false)">
+                    Save
+                </button>
+                <button class="choiceButton" on="tap:siteConsent.dismiss">
+                    Dismiss
+                </button>
+            </div>
+            <p>
+                Click "Save" to save your choices.
+                <br>
+                Click "Dismiss" to get rid of this dialog box without saving your
+                choices.
+            </p>
+        </div>
+    </div>
+
+    @* <div id="myConsentFlow" class="popupOverlay"> *@
+    @*     <div class="consentPopup"> *@
+    @*         <div class="dismiss-button" role="button" tabindex="0" on="tap:myUserConsent.dismiss">X</div> *@
+    @*         <h2>Headline</h2> *@
+    @*         <p>If the server says you have not made a consent decision, we require you to make a choice.</p> *@
+    @*         <button on="tap:myUserConsent.accept">Accept</button> *@
+    @*         <button on="tap:myUserConsent.reject">Reject</button> *@
+    @* *@
+    @*     </div> *@
+    @* </div> *@
+
+
+@* <amp-state> *@
+@*     { *@
+@*        "slidingStepperPage" : 4 *@
+@*     } *@
+@* </amp-state> *@
+
+<div id="consentDemoArea">
+    <p class="note">(See the results of your consent choices here)</p>
+    <amp-fit-text id="marketingContent" width="200" height="50" layout="fixed" data-block-on-consent-purposes="purpose-marketing">
+        I'm shown if you allow marketing cookies.
+    </amp-fit-text>
+    <amp-fit-text id="conversionContent" width="200" height="50" layout="fixed" data-block-on-consent-purposes="purpose-marketing,purpose-analytics">
+        I'm shown if you allow marketing AND analytics cookies.
+    </amp-fit-text>
+    <amp-fit-text id="analyticsContent" width="200" height="50" layout="fixed" data-block-on-consent-purposes="purpose-analytics">
+        I'm shown if you allow analytics cookies.
+    </amp-fit-text>
+    <amp-fit-text id="analyticsContent2" width="200" height="50" layout="fixed" data-block-on-consent="weeklyNewslettersConsent">
+        I'm shown if you allow analytics sdsds.
+    </amp-fit-text>
+    <amp-fit-text id="analyticsContent2" width="200" height="50" layout="fixed" data-block-on-consent="weeklyNewslettersConsent">
+        I'm shown if you allow analytics sdsds.
+    </amp-fit-text>
+    <input [text]="siteConsent.weeklyNewslettersConsent.consentStateValue" [value]="siteConsent.weeklyNewslettersConsent.consentStateValue"/>
+    <input [text]="siteConsent.weeklyNewslettersConsent" [value]="siteConsent.weeklyNewslettersConsent" />
+    <input [text]="siteConsent.consentStateValue" [value]="siteConsent.consentStateValue" />
+    <input [text]="weeklyNewslettersConsent.consentStateValue" />
+ </div>
+
+
+
+<form class="stepper sliding" method="post" action-xhr="/documentation/examples/api/submit-form-input-text-xhr" novalidate on="submit: AMP.setState({ slidingStepperPage: 2 });
+          submit-success: AMP.setState({ slidingStepperPage: 3 });
+          submit-error: AMP.setState({ slidingStepperPage: 4 });
+      ">
+    <section class="page active" [class]="slidingStepperPage > 0 ? 'page previous' : 'page active'">
+        <h3>Sign in</h3>
+        <div class="input">
+            <input type="email" value name="email" autocomplete="email" id="id1" placeholder="Enter your Email" on="input-debounced: AMP.setState({ email: event.value })">
+            <label for="ip1" aria-hidden="true">
+                Enter your Email
+            </label>
+        </div>
+        <div class="choices">
+
+            <label class="consentLabel" for="consent-purpose-marketing">
+                <input id="consent-purpose-marketing-input" type="checkbox" on="change:siteConsent.setPurpose(purpose-marketing=event.checked)">
+                Marketing cookies
+            </label>
+            <label class="consentLabel" for="consent-purpose-conversion">
+                <input id="consent-purpose-conversion-input" type="checkbox" on="change:siteConsent.setPurpose(purpose-conversion=event.checked)">
+                Conversion tracking cookies
+            </label>
+            <label class="consentLabel" for="consent-purpose-analytics">
+                <input id="consent-purpose-analytics-input" type="checkbox" on="change:siteConsent.setPurpose(purpose-analytics=event.checked)">
+                Analytics
+            </label>
+
+
+        </div>
+
+        @* <button class="ampstart-btn ampstart-btn-secondary caps" on="tap:AMP.setState({weeklySubscriptionsState: 'subscribed'}),weeklyNewslettersConsent.accept" data-block-on-consent="" amp-access-template="">Subscribe</button> *@
+
+        <button type="button" on="tap:siteConsent.accept(purposeConsentDefault=false)" disabled [disabled]="!email">next</button>
+    </section>
+    <section class="page next" [class]="slidingStepperPage < 1 ? 'page next' :
+           (slidingStepperPage > 1 ? 'page previous' : 'page active')">
+        <h3>Welcome</h3>
+        <button class="back" [text]="email" on="tap:AMP.pushState({ slidingStepperPage: slidingStepperPage - 1 })" disabled [disabled]="slidingStepperPage != 1" type="button"></button>
+        <div class="input">
+            <input type="password" value name="password" id="id2" placeholder="Enter your Password" disabled [disabled]="slidingStepperPage != 1" on="input-debounced: AMP.setState({ password: event.value })">
+            <label for="ip2" aria-hidden="true">
+                Enter your Password
+            </label>
+        </div>
+        <button disabled [disabled]="slidingStepperPage != 1 || !password" type="submit">submit</button>
+    </section>
+    <section class="page next" [class]="slidingStepperPage < 2 ? 'page next' :
+           (slidingStepperPage > 2 ? 'page previous' : 'page active')">
+        <p>Submitting ...</p>
+    </section>
+    <section class="page next" [class]="slidingStepperPage < 3 ? 'page next' :
+           (slidingStepperPage > 3 ? 'page previous' : 'page active')">
+        <h3>Success</h3>
+        <p>You did it!</p>
+    </section>
+    <section class="page next" [class]="slidingStepperPage < 4 ? 'page next' :
+           (slidingStepperPage > 4 ? 'page previous' : 'page active')">
+        <h3>Something went wrong. </h3>
+        <button on="tap:AMP.setState({ slidingStepperPage: 0 })" type="button">Try again</button>
+    </section>
+</form>
+</amp-consent>
+
+
+@section head
+{
+    <title>Server Side User Consent Flow</title>
+
+}
+
+@section scripts
+{
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-consent" src="https://cdn.ampproject.org/v0/amp-consent-0.1.js"></script>
+    <script async custom-element="amp-fit-text" src="https://cdn.ampproject.org/v0/amp-fit-text-0.1.js"></script>
+    <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+    <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
+    <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+    <script async custom-element="amp-video" src="https://cdn.ampproject.org/v0/amp-video-0.1.js"></script>
+    <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+    <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
+    <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+
+}

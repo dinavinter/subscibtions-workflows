@@ -1,17 +1,22 @@
 using System;
 using System.Configuration;
+using System.IO;
 using AspNetCoreDemoApp.Activities;
+using AspNetCoreDemoApp.DsStore;
 using AspNetCoreDemoApp.Providers.ActivityTypes;
 using AspNetCoreDemoApp.Providers.Extensions;
+using CommunicationPreferences.Workflow;
 using Elsa;
 using Elsa.Activities.Conductor.Extensions;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.Sqlite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
 namespace AspNetCoreDemoApp
@@ -27,23 +32,33 @@ namespace AspNetCoreDemoApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddRazorPages( );
 
             var elsaSection = Configuration.GetSection("Elsa");
 
             // Elsa services.
             services
-                .AddElsa(elsa => elsa
-                    .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
-                    // .AddConsoleActivities()
+                .AddElsa(elsa =>
+                {
+                    elsa
+                        .UseEntityFrameworkPersistence(ef => ef.UseSqlite())
+                        // .AddConsoleActivities()
+                        .AddXStateActivities(options => elsaSection.GetSection("XState").Bind(options))
+                        .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                        .AddActivity<UpdateAccountAttributes>()
+                        .AddQuartzTemporalActivities()
+                        .AddJavaScriptActivities()
+                        .AddCommunicationPreferences();
 
+                    elsa.Services
+                        .AddSingleton<HttpJsonClient>()
+                        .AddSingleton(typeof(DsStore<>))
+                        .AddSingleton(typeof(DefinitionDsStore));
 
-                    .AddXStateActivities(options => elsaSection.GetSection("XState").Bind(options))
-                   .AddHttpActivities(elsaSection.GetSection("Server").Bind)
-                    .AddActivity<UpdateAccountAttributes>()
-                    // .AddQuartzTemporalActivities()
-                    // .AddJavaScriptActivities()
-                );
+                    elsa
+                        .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<DefinitionDsStore>())
+                        ;
+                });
 
             // Elsa API endpoints.
             services
@@ -81,6 +96,8 @@ namespace AspNetCoreDemoApp
                 Console.WriteLine("Use https redirection");
                 app.UseHttpsRedirection();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elsa"));
 
             if (env.IsDevelopment())
             {
@@ -106,11 +123,25 @@ namespace AspNetCoreDemoApp
                     endpoints.MapControllers();
 
                     app.UseEndpoints(endpoints => { endpoints.MapFallbackToPage("/_Host"); });
+
+                    endpoints.MapRazorPages();
+
                 })
                 .UseDefaultFiles()
                 .UseStaticFiles()
+
+
+
                 .UseCors("CorsPolicy")
                 .UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
+
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(env.WebRootPath, "_api")),
+                RequestPath = "/_api",
+                EnableDirectoryBrowsing = true
+            });
         }
     }
 }
